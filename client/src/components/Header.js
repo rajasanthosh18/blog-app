@@ -13,7 +13,7 @@ const Header = () => {
         setUserInfo(userIn);
       });
     });
-  }, []);
+  },[]);
 
   const logout = ()=>{
     fetch('http://localhost:8000/logout',{
@@ -34,7 +34,7 @@ const Header = () => {
       <nav>
         {username && (
           <>
-            <Link to="">Create a post</Link>
+            <Link to="/create">Create a post</Link>
             <button onClick={logout}>Logout</button>
           </>
         )}

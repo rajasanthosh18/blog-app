@@ -6,6 +6,10 @@ const bcrypt = require("bcryptjs");
 const app = express();
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+const Post = require("./models/Post")
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+const fs = require('fs')
 
 const salt = bcrypt.genSaltSync(10);
 const secret = "sdfghbn1324rtgq4rs";
@@ -63,5 +67,24 @@ app.get('/profile',async(req,res)=>{
 app.post('/logout',(req,res)=>{
   res.cookie('token','').json('ok');
 })
+
+app.post("/post", upload.single("file"), async (req, res) => {
+  const { originalname, path } = req.file;
+  const parts = originalname.split(".");
+  const ext = parts[parts.length - 1];
+  newPath = path + "." + ext;
+  fs.renameSync(path, newPath);
+
+  const { title, summary, content } = req.body;
+
+  const postInfo = await Post.create({
+    title,
+    summary,
+    content,
+    cover: newPath,
+  });
+
+  res.json(postInfo)
+});
 
 app.listen(8000, () => console.log("server started listening"));
