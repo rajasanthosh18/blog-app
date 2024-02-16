@@ -40,18 +40,28 @@ app.post("/login", async (req, res) => {
   if (passCheck) {
     jwt.sign({username,id:userData._id},secret,{},(err,token)=>{
         if(err) throw err;
-        res.cookie('token',token).json('ok')
+        res.cookie('token',token).json({
+          id: userData._id,
+          username,
+        })
     })
   } else res.status(400).json("notcool");
 });
 
 app.get('/profile',async(req,res)=>{
   const {token} = req.cookies;
+  if (!token) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
   jwt.verify(token,secret,{},(err,info)=>{
     if(err) throw err;
     res.json(info);
     
   })
+})
+
+app.post('/logout',(req,res)=>{
+  res.cookie('token','').json('ok');
 })
 
 app.listen(8000, () => console.log("server started listening"));
