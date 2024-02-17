@@ -72,3 +72,8 @@ button{
 form.login h1, form.register h1{
   text-align: center;
 }
+
+time{
+  font-size: small;
+
+}

@@ -19,6 +19,7 @@ const CreatePost = () => {
     const res = await fetch('http://localhost:8000/post',{
       method: 'POST',
       body: data,
+      credentials: 'include'
     })
     if(res.ok){
       setRedirect(true)

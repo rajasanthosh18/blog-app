@@ -14,6 +14,7 @@ const fs = require('fs')
 const salt = bcrypt.genSaltSync(10);
 const secret = "sdfghbn1324rtgq4rs";
 
+app.use('/uploads',express.static('uploads'))
 app.use(cors({credentials: true, origin:'http://localhost:3000'}));
 app.use(express.json());
 app.use(cookieParser())
@@ -76,15 +77,28 @@ app.post("/post", upload.single("file"), async (req, res) => {
   fs.renameSync(path, newPath);
 
   const { title, summary, content } = req.body;
+  const {token} = req.cookies;
+  if (!token) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+  jwt.verify(token,secret,{},async(err,info)=>{
+    if(err) throw err;
+    const postInfo = await Post.create({
+      title,
+      summary,
+      content,
+      cover: newPath,
+      author: info.id
+    });    
+    res.json(postInfo)
 
-  const postInfo = await Post.create({
-    title,
-    summary,
-    content,
-    cover: newPath,
-  });
+  })
+  
 
-  res.json(postInfo)
 });
+
+app.get('/post',async(req,res)=>{
+  res.json(await Post.find().populate('author').sort({createdAt: -1}).limit(10))
+})
 
 app.listen(8000, () => console.log("server started listening"));

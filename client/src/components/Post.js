@@ -1,14 +1,18 @@
 import React from "react";
 
-const Post = (props) => {
+const Post = ({title,summary,updatedAt,content,cover,author}) => {
   return (
     <div className="post">
       <div className="img">
-        <img src="https://img.freepik.com/free-photo/sports-car-races-through-dark-blurred-motion-generative-ai_188544-12490.jpg?size=626&ext=jpg&ga=GA1.1.87170709.1707782400&semt=ais" />
+        <img src={"http://localhost:8000/" + cover} />
       </div>
       <div className="side">
-        <h1>Title</h1>
-        <p>description</p>
+        <h1>{title}</h1>
+        <p>
+          <p>{author.username}</p>
+          <time className="time">EditedAt : {updatedAt.slice(0, 10)}</time>  
+        </p>
+        <p>{summary}</p>
       </div>
     </div>
   );
