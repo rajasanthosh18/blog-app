@@ -22,7 +22,7 @@ const Login = () => {
       })
     }
     else{
-        alert("wrong credential")
+        alert("provide correct details")
     }
   }
   if(redirect){

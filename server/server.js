@@ -41,6 +41,9 @@ app.post("/registration", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { username, password } = req.body;
   const userData = await User.findOne({ username });
+  if (!userData) {
+    return res.status(400).json("not have user");
+  }
   const passCheck = bcrypt.compareSync(password, userData.password);
   if (passCheck) {
     jwt.sign({username,id:userData._id},secret,{},(err,token)=>{
